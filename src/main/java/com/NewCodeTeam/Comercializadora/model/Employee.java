@@ -18,6 +18,10 @@ public class Employee {
 
     private String email;
 
+    @OneToOne
+    @JoinColumn(name="id_profile")
+    private Profile profile;
+
     private EnumRoleName role;
 
     @ManyToOne
@@ -32,8 +36,9 @@ public class Employee {
 
     private LocalDate createdAt;
 
-    public Employee(String email, EnumRoleName role, Enterprise enterprises, Set<Transaction> transactions, LocalDate updatedAt, LocalDate createdAt) {
+    public Employee(String email, Profile profile, EnumRoleName role, Enterprise enterprises, Set<Transaction> transactions, LocalDate updatedAt, LocalDate createdAt) {
         this.email = email;
+        this.profile = profile;
         this.role = role;
         this.enterprises = enterprises;
         this.transactions = transactions;
@@ -101,6 +106,14 @@ public class Employee {
         this.createdAt = createdAt;
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,6 +135,7 @@ public class Employee {
         return "Employee{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
+                ", profile=" + profile +
                 ", role=" + role +
                 ", enterprises=" + enterprises +
                 ", transactions=" + transactions +
