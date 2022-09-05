@@ -17,13 +17,16 @@ public class Enterprise{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
+    @Column(name = "name", unique = true)
     private String name;
 
+    @Column(name = "document", unique = true)
     private String document;
 
+    @Column(name="phone")
     private String phone;
 
+    @Column(name="address")
     private String address;
 
     @OneToMany(mappedBy = "enterprises")
