@@ -52,4 +52,6 @@ public class EnterpriseRest {
         enterpriseService.deleteById(id);
         return ResponseEntity.ok(enterpriseService.findById(id)!= null);
     }
+
+
 }
