@@ -17,37 +17,37 @@ public class EmployeeRest {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/employees")
+    @GetMapping("/user")
     public ResponseEntity<List<Employee>> getAllEmployee (){
         return ResponseEntity.ok(employeeService.findAll());
     }
 
-    @GetMapping("/employees/{id}")
+    @GetMapping("/user/{id}")
     public Optional<Employee> getEmployeeById (@PathVariable("id") Long id){
         return this.employeeService.findById(id);
     }
 
-    @PostMapping("/employees")
+    @PostMapping("/user")
     public  ResponseEntity<Employee> saveEmployee (@RequestBody Employee employee){
         try {
             Employee employeeSave = employeeService.save(employee);
-            return ResponseEntity.created(new URI("/api/employees"+ employeeSave.getId())).body(employeeSave);
+            return ResponseEntity.created(new URI("/api/user"+ employeeSave.getId())).body(employeeSave);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    @PatchMapping("/employees")
+    @PatchMapping("/user")
     public  ResponseEntity<Employee> updateEmployee (@RequestBody Employee employee){
         try {
             Employee employeeSave = employeeService.save(employee);
-            return ResponseEntity.created(new URI("/api/employees"+ employeeSave.getId())).body(employeeSave);
+            return ResponseEntity.created(new URI("/api/user"+ employeeSave.getId())).body(employeeSave);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    @DeleteMapping(value = "/employees/{id}")
+    @DeleteMapping(value = "/user/{id}")
     public  String deleteEmployee (@PathVariable("id") Long id){
         boolean answer=employeeService.deleteById(id);
         if (answer){
