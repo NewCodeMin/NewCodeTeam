@@ -24,11 +24,11 @@ Employee {
     @JoinColumn(name="id_profile")
     private Profile profile;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="role")
     private EnumRoleName role;
 
     @ManyToOne
-    @JsonIgnoreProperties("enterprises")
     @JoinColumn(name="id_enterprise")
     private Enterprise enterprises;
 
