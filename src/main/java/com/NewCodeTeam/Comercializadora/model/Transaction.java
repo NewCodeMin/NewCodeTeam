@@ -1,5 +1,6 @@
 package com.NewCodeTeam.Comercializadora.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
@@ -23,7 +24,6 @@ public class Transaction {
     @JoinColumn(name="id_user")
     private Employee user;
     @ManyToOne
-    @JsonIgnoreProperties("enterprises")
     @JoinColumn(name="id_enterprise")
     private Enterprise enterprises;
 
