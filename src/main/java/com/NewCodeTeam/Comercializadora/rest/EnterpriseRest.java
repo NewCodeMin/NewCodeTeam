@@ -2,7 +2,6 @@ package com.NewCodeTeam.Comercializadora.rest;
 
 import com.NewCodeTeam.Comercializadora.Service.EnterpriseService;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
-import com.NewCodeTeam.Comercializadora.model.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
