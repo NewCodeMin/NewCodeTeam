@@ -37,6 +37,7 @@ public class Enterprise{
     private Set<Employee> users = new HashSet<>();
 
     @OneToMany(mappedBy = "enterprises")
+    @JsonIgnore
     private Set<Transaction> transactions = new HashSet<>();
 
 

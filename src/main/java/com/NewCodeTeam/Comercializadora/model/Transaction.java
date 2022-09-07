@@ -24,7 +24,6 @@ public class Transaction {
     @JoinColumn(name="id_user")
     private Employee user;
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name="id_enterprise")
     private Enterprise enterprises;
 

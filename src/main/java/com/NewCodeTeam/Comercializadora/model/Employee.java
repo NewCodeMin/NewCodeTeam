@@ -1,6 +1,7 @@
 package com.NewCodeTeam.Comercializadora.model;
 
 import com.NewCodeTeam.Comercializadora.model.enumeration.EnumRoleName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -33,6 +34,7 @@ Employee {
     private Enterprise enterprises;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Transaction> transactions = new HashSet<>();
 
     @Column(name="updatedAt")
