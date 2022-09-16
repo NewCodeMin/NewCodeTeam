@@ -6,57 +6,77 @@ import com.NewCodeTeam.Comercializadora.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/api")
-public class EnterpriseRest {
+public class EnterpriseController {
 
     @Autowired
     private EnterpriseService enterpriseService;
 
     @GetMapping("/enterprises")
-    public ResponseEntity<List<Enterprise>> getAllEnterprise (){
-        return ResponseEntity.ok(enterpriseService.findAll());
+    public String getAllEnterprise(Model model, @ModelAttribute("mensaje") String mensaje){
+        List<Enterprise> enterpriseList=enterpriseService.findAll();
+        model.addAttribute("listEnterprise",enterpriseList);
+        model.addAttribute("mensaje",mensaje);
+        return "enterprises";
     }
 
-    @GetMapping("/enterprises/{id}")
-    public Optional <Enterprise> getEnterpriseById (@PathVariable("id") Long id){
-        return this.enterpriseService.findById(id);
+    @GetMapping("/newEnterprise")
+    public String newEnterprise(Model model, @ModelAttribute("mensaje") String mensaje){
+        Enterprise emp= new Enterprise();
+        model.addAttribute("emp",emp);
+        model.addAttribute("mensaje",mensaje);
+        return "newEnterprise";
     }
 
-    @PostMapping("/enterprises")
-    public  ResponseEntity<Enterprise> saveEnterprise (@RequestBody Enterprise enterprise){
+    @PostMapping("/saveEnterprise")
+    public String saveEnterprise (Enterprise emp, RedirectAttributes redirectAttributes){
         try {
-            Enterprise enterpriseSave = enterpriseService.save(enterprise);
-            return ResponseEntity.created(new URI("/api/enterprises"+ enterpriseSave.getId())).body(enterpriseSave);
+            enterpriseService.save(emp);
+            redirectAttributes.addFlashAttribute("mensaje","saveOK");
+            return "redirect:/api/enterprises";
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            redirectAttributes.addFlashAttribute("mensaje","saveError");
+            return "redirect:/api/newEnterprise";
         }
     }
 
-    @PatchMapping("/enterprises")
-    public  ResponseEntity<Enterprise> updateEnterprise (@RequestBody Enterprise enterprise){
+    @GetMapping("/editEnterprise/{id}")
+    public String editEnterprise(Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Enterprise emp= enterpriseService.findById(id);
+        model.addAttribute("emp",emp);
+        model.addAttribute("mensaje", mensaje);
+        return "editEnterprise";
+    }
+
+    @PostMapping("/updateEnterprise")
+    public  String updateEnterprise (@ModelAttribute("emp") Enterprise emp, RedirectAttributes redirectAttributes){
         try {
-            Enterprise enterpriseSave = enterpriseService.save(enterprise);
-            return ResponseEntity.created(new URI("/api/enterprises"+ enterpriseSave.getId())).body(enterpriseSave);
+            enterpriseService.save(emp);
+            redirectAttributes.addFlashAttribute("mensaje","updateOK");
+            return "redirect:/api/enterprises";
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            redirectAttributes.addFlashAttribute("mensaje","updateError");
+            return "redirect:/api/editEnterprise/"+emp.getId();
         }
     }
 
-    @DeleteMapping(value = "/enterprises/{id}")
-    public  String deleteEnterprise (@PathVariable("id") Long id){
-        boolean answer=enterpriseService.deleteById(id);
-        if (answer){
-            return "Se pudo eliminar correctamente la empresa con id "+id;
+    @GetMapping(value = "/deleteEnterprise/{id}")
+    public  String deleteEnterprise (@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+        if (enterpriseService.deleteById(id)==true){
+            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
         }else{
-            return "No se puedo eliminar correctamente la empresa con id "+id;
+            redirectAttributes.addFlashAttribute("mensaje", "deleteError");
         }
+        return "redirect:/api/enterprises";
     }
 
     @GetMapping ("enterprises/{id}/movements")

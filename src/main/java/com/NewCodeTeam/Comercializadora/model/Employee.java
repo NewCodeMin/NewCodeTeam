@@ -3,9 +3,11 @@ package com.NewCodeTeam.Comercializadora.model;
 import com.NewCodeTeam.Comercializadora.model.enumeration.EnumRoleName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,12 +40,14 @@ Employee {
     private Set<Transaction> transactions = new HashSet<>();
 
     @Column(name="updatedAt")
-    private LocalDate updatedAt;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date updatedAt;
 
     @Column(name="createdAt")
-    private LocalDate createdAt;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date createdAt;
 
-    public Employee(String email, Profile profile, EnumRoleName role, Enterprise enterprises, Set<Transaction> transactions, LocalDate updatedAt, LocalDate createdAt) {
+    public Employee(String email, Profile profile, EnumRoleName role, Enterprise enterprises, Set<Transaction> transactions, Date updatedAt, Date createdAt) {
         this.email = email;
         this.profile = profile;
         this.role = role;
@@ -97,19 +101,19 @@ Employee {
         this.transactions = transactions;
     }
 
-    public LocalDate getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public LocalDate getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -119,35 +123,5 @@ Employee {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Employee)) {
-            return false;
-        }
-        return id != null && id.equals(((Employee) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", profile=" + profile +
-                ", role=" + role +
-                ", enterprises=" + enterprises +
-                ", transactions=" + transactions +
-                ", updatedAt=" + updatedAt +
-                ", createdAt=" + createdAt +
-                '}';
     }
 }

@@ -99,33 +99,4 @@ public class Transaction {
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Transaction)) {
-            return false;
-        }
-        return id != null && id.equals(((Transaction) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", concept='" + concept + '\'' +
-                ", amount=" + amount +
-                ", user=" + user +
-                ", enterprises=" + enterprises +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

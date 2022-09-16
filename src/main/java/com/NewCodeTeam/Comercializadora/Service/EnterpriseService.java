@@ -38,8 +38,8 @@ public class EnterpriseService {
         return enterpriseRepository.save(entity);
     }
 
-    public Optional<Enterprise> findById(Long id) {
-        return enterpriseRepository.findById(id);
+    public Enterprise findById(Long id) {
+        return enterpriseRepository.findById(id).get();
     }
 
     public List<Transaction> findMovimentsEnterpriseByIdEnterprise(Long id) {
