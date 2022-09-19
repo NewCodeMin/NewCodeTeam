@@ -33,6 +33,7 @@
     <th>Telefono</th>
     <th>NIT</th>
     <th>Empleados</th>
+    <th>Movimientos</th>
     <th>Editar</th>
     <th>Eliminar</th>
   </tr>
@@ -46,6 +47,7 @@
     <td th:text="${enterprise.phone}"></td>
     <td th:text="${enterprise.document}"></td>
     <td><button type="button" class="btn btn-info"><a th:href="@{/api/enterprise/{id}/employees (id=${enterprise.id})}">Ver empleados</a></button></td>
+    <td><button type="button" class="btn btn-primary"><a th:href="@{/api/enterprise/{id}/movements (id=${enterprise.id})}">Ver movimientos</a></button></td>
     <td><button type="button" class="btn btn-warning"><a th:href="@{/api/editEnterprise/{id}(id=${enterprise.id})}">Editar</a></button></td>
     <td><button type="button" class="btn btn-danger"><a th:href="@{/api/deleteEnterprise/{id}(id=${enterprise.id})}">Eliminar</a></button></td>
   </tr>

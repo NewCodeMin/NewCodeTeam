@@ -33,7 +33,6 @@
     <th>Correo</th>
     <th>Empresa</th>
     <th>Rol</th>
-    <th>Movimientos</th>
     <th>Fecha creada</th>
     <th>Fecha actualizada</th>
     <th>Editar</th>
@@ -48,7 +47,6 @@
     <td th:text="${empleado.enterprises.name}"></td>
     <td th:if="${empleado.role==empleado.role.Admin}">Administrativo</td>
     <td th:if="${empleado.role==empleado.role.Operario}">Operativo</td>
-    <td><button type="button" class="btn btn-info"><a>Movimientos</a></button></td>
     <td th:text="${empleado.createdAt}"></td>
     <td th:text="${empleado.updatedAt}"></td>
     <td><button type="button" class="btn btn-warning"><a th:href="@{/api/editEmployee/{id}(id=${empleado.id})}">Editar</a></button></td>
@@ -60,7 +58,7 @@
   <button type="button" class="btn btn-info"><a th:href="@{/api/newEmployee}">Agregar Nuevo Empleado</a></button>
   <br><br>
   <!-- boton que me lleva a la lista de empresas -->
-  <button type="button" class="btn btn-primary"><a th:href="@{/VerEmpresas}">Ver lista de Empresas</a></button>
+  <button type="button" class="btn btn-primary"><a th:href="@{/api/enterprises}">Ver lista de Empresas</a></button>
 </div>
 
 <script th:inline="javascript">

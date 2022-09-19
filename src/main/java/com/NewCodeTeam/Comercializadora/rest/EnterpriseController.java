@@ -1,17 +1,16 @@
 package com.NewCodeTeam.Comercializadora.rest;
 
+import com.NewCodeTeam.Comercializadora.Service.EmployeeService;
 import com.NewCodeTeam.Comercializadora.Service.EnterpriseService;
+import com.NewCodeTeam.Comercializadora.model.Employee;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -20,6 +19,10 @@ public class EnterpriseController {
 
     @Autowired
     private EnterpriseService enterpriseService;
+
+    @Autowired
+    private EmployeeService employeeService;
+
 
     @GetMapping("/enterprises")
     public String getAllEnterprise(Model model, @ModelAttribute("mensaje") String mensaje){
@@ -79,38 +82,77 @@ public class EnterpriseController {
         return "redirect:/api/enterprises";
     }
 
-    @GetMapping ("enterprises/{id}/movements")
-    private ResponseEntity<List<Transaction>> getAllEstadosByPais (@PathVariable("id") Long id){
-        return ResponseEntity.ok(enterpriseService.findMovimentsEnterpriseByIdEnterprise(id));
+    //Movimientos:
+
+    @GetMapping ("enterprise/{id}/movements")
+    public String getAllmovementsByEnterprise (Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        List<Transaction> movimentsList=enterpriseService.findMovimentsEnterpriseByIdEnterprise(id);
+        float total = enterpriseService.sumMoviments(id);
+        model.addAttribute("listMoviments",movimentsList);
+        List<Enterprise> empre= enterpriseService.findByIdList(id);
+        model.addAttribute("empre",empre);
+        model.addAttribute("mensaje",mensaje);
+        model.addAttribute("suma", total);
+        return "movementsEnterprise";
     }
 
-    @PostMapping("/enterprises/{id}/movements")
-    public  ResponseEntity<Transaction> saveMovementEnterprise (@PathVariable("id") Long id,@RequestBody Transaction transaction){
+    @GetMapping("enterprise/{id}/newMovements")
+    public String newMoviments(Model model,@PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Transaction movement= new Transaction();
+        model.addAttribute("movement",movement);
+        model.addAttribute("mensaje",mensaje);
+        List<Enterprise> empre= enterpriseService.findByIdList(id);
+        model.addAttribute("empre",empre);
+        int numero = 5;
+        long numLong = numero;
+        Employee employ =  employeeService.findById(numLong);
+        model.addAttribute("employ",employ);
+        return "newMovements";
+    }
+
+    @PostMapping("/enterprise/saveMovementEnterprise")
+    public  String saveMovementEnterprise (Transaction transaction, RedirectAttributes redirectAttributes){
         try {
-            Transaction transactionSave = enterpriseService.saveTransaction(transaction);
-            return ResponseEntity.created(new URI("/api/enterprises/"+id+"/movements"+ transactionSave.getId())).body(transactionSave);
+            enterpriseService.saveTransaction(transaction);
+            redirectAttributes.addFlashAttribute("mensaje","saveOK");
+            return "redirect:/api/enterprise/"+transaction.getEnterprises().getId()+"/movements";
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            redirectAttributes.addFlashAttribute("mensaje","saveError");
+            return "redirect:/api/enterprise/"+transaction.getEnterprises().getId()+"/newMovements";
         }
     }
 
-    @PatchMapping("/enterprises/{id}/movements")
-    public  ResponseEntity<Transaction> updateMovementEnterprise (@PathVariable("id") Long id,@RequestBody Transaction transaction){
+    @GetMapping("/editMovementEnterprise/{id}")
+    public String editMovementEnterprise(Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Transaction mov= enterpriseService.findByIdTransaction(id);
+        model.addAttribute("mov",mov);
+        model.addAttribute("mensaje", mensaje);
+        List<Enterprise> empre= enterpriseService.findByIdList(mov.getEnterprises().getId());
+        model.addAttribute("empre",empre);
+        Employee employ =  employeeService.findById(mov.getUser().getId());
+        model.addAttribute("employ",employ);
+        return "editMovements";
+    }
+
+    @PostMapping("/enterprise/updateMovementEnterprise")
+    public  String updateMovementEnterprise (@ModelAttribute("mov") Transaction mov,RedirectAttributes redirectAttributes){
         try {
-            Transaction transactionSave = enterpriseService.saveTransaction(transaction);
-            return ResponseEntity.created(new URI("/api/enterprises/"+id+"/movements"+ transactionSave.getId())).body(transactionSave);
+            enterpriseService.saveTransaction(mov);
+            redirectAttributes.addFlashAttribute("mensaje","updateOK");
+            return "redirect:/api/enterprise/"+mov.getEnterprises().getId()+"/movements";
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            redirectAttributes.addFlashAttribute("mensaje","updateError");
+            return "redirect:/api/enterprise/"+mov.getEnterprises().getId()+"/newMovements";
         }
     }
 
-    @DeleteMapping(value = "/enterprises/{idEnterprise}/movements/{id}")
-    public  String deleteMovementEnterprise (@PathVariable("id") Long id){
-        boolean answer=enterpriseService.deleteMovementById(id);
-        if (answer){
-            return "Se pudo eliminar correctamente el movimiento de la empresa";
+    @GetMapping(value = "/enterprise/{idEnterprise}/deleteMovement/{id}")
+    public  String deleteMovementEnterprise (@PathVariable("idEnterprise") Long idEnterprise,@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+        if (enterpriseService.deleteMovementById(id) == true){
+            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
         }else{
-            return "No se puedo eliminar correctamente el movimiento de la empresa";
+            redirectAttributes.addFlashAttribute("mensaje", "deleteError");
         }
+        return "redirect:/api/enterprise/"+idEnterprise+"/movements";
     }
 }

@@ -42,6 +42,18 @@ public class EnterpriseService {
         return enterpriseRepository.findById(id).get();
     }
 
+    public List<Enterprise>findByIdList (Long id) {
+        List<Enterprise> enterpriseL = new ArrayList<>();
+        List<Enterprise> enterprisesAll = enterpriseRepository.findAll();
+        for (Enterprise enterprise : enterprisesAll) {
+            if (Objects.equals(enterprise.getId(), id)) {
+                enterpriseL.add(enterprise);
+                break;
+            }
+        }
+        return  enterpriseL;
+    }
+
     public List<Transaction> findMovimentsEnterpriseByIdEnterprise(Long id) {
         List<Transaction> transactions = new ArrayList<>();
         List<Transaction> transactionsList = transactionRepository.findAll();
@@ -51,6 +63,15 @@ public class EnterpriseService {
             }
         }
         return transactions;
+    }
+
+    public float sumMoviments(Long id){
+        List<Transaction> moviments = findMovimentsEnterpriseByIdEnterprise(id);
+        float total = 0;
+        for (Transaction transaction : moviments) {
+            total += transaction.getAmount();
+        }
+        return total;
     }
 
     public <S extends Transaction> S saveTransaction(S entity) {
@@ -63,5 +84,9 @@ public class EnterpriseService {
             return false;
         }
         return true;
+    }
+
+    public Transaction findByIdTransaction(Long id) {
+        return transactionRepository.findById(id).get();
     }
 }
