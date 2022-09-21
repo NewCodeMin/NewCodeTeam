@@ -68,7 +68,7 @@ public class EmployeeController {
         model.addAttribute("mensaje", mensaje);
         List<Enterprise> enterpriseList= enterpriseService.findAll();
         model.addAttribute("emprelist",enterpriseList);
-        List<EnumRoleName> listRole= new ArrayList<EnumRoleName>(Arrays.asList(EnumRoleName.values()));;
+        List<EnumRoleName> listRole= new ArrayList<EnumRoleName>(Arrays.asList(EnumRoleName.values()));
         model.addAttribute("rolelist",listRole);
         return "editEmployee";
     }

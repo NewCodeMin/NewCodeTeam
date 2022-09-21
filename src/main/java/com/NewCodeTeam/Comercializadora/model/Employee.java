@@ -47,7 +47,9 @@ Employee {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date createdAt;
 
-    public Employee(String email, Profile profile, EnumRoleName role, Enterprise enterprises, Set<Transaction> transactions, Date updatedAt, Date createdAt) {
+    private String password;
+
+    public Employee(String email, Profile profile, EnumRoleName role, Enterprise enterprises, Set<Transaction> transactions, Date updatedAt, Date createdAt, String password) {
         this.email = email;
         this.profile = profile;
         this.role = role;
@@ -55,6 +57,7 @@ Employee {
         this.transactions = transactions;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
+        this.password = password;
     }
 
     public Employee() {
@@ -123,5 +126,13 @@ Employee {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
