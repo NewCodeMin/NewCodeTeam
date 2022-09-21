@@ -5,8 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <style>
     a{
       color:white;
@@ -71,8 +73,8 @@
       <div class="form-group col-md-12">
         <label class="col-md-3" for="user">Empleado al que pertence:</label>
         <div class="col-md-6">
-          <select th:field="*{user}" class="form-control" id="user" required="required">
-            <option th:each="empleado : ${employ}" th:text="${empleado.email}" th:value="${empleado.id}"></option>
+          <select th:field="*{user}" class="form-control" id="user" required="required" readonly>
+            <option th:text="${#httpServletRequest.remoteUser}" th:value="${idEmployee}"></option>
           </select>
         </div>
       </div>
@@ -101,7 +103,7 @@
     <!--Boton para enviar todo y ejecutar accion -->
     <div class="row">
       <div class="col-md-2">
-        <button class="btn btn-success">Actualizar empleado</button>
+        <button class="btn btn-success">Actualizar movimiento</button>
       </div>
     </div>
 
@@ -114,7 +116,19 @@
 <script th:inline="javascript">
   window.onload=function(){
     document.getElementById("updatedAt").value=new Date().toJSON().slice(0,10).replace(/-/g,'-');
+
+    var msg= [[${mensaje}]];
+    if (msg == "updateErrorUsuario"){
+      Command : toastr["error"]("ERROR  este movimiento no le corresponde!")
+    }
+    toastr.options={
+      "positionClass": "toast-top-right",
+      "showDuration":"300",
+      "showMethod":"fadeIn",
+      "hideMethod":"fadeOut",
+    }
   }
 </script>
+
 </body>
 </html>

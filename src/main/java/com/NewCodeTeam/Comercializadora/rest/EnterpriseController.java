@@ -6,6 +6,8 @@ import com.NewCodeTeam.Comercializadora.model.Employee;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -103,10 +105,10 @@ public class EnterpriseController {
         model.addAttribute("mensaje",mensaje);
         List<Enterprise> empre= enterpriseService.findByIdList(id);
         model.addAttribute("empre",empre);
-        int numero = 5;
-        long numLong = numero;
-        Employee employ =  employeeService.findById(numLong);
-        model.addAttribute("employ",employ);
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email=auth.getName();
+        Long idEmployee=enterpriseService.findByEmail(email);
+        model.addAttribute("idEmployee",idEmployee);
         return "newMovements";
     }
 
@@ -129,20 +131,28 @@ public class EnterpriseController {
         model.addAttribute("mensaje", mensaje);
         List<Enterprise> empre= enterpriseService.findByIdList(mov.getEnterprises().getId());
         model.addAttribute("empre",empre);
-        Employee employ =  employeeService.findById(mov.getUser().getId());
-        model.addAttribute("employ",employ);
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email=auth.getName();
+        Long idEmployee=enterpriseService.findByEmail(email);
+        model.addAttribute("idEmployee",idEmployee);
         return "editMovements";
     }
 
     @PostMapping("/enterprise/updateMovementEnterprise")
     public  String updateMovementEnterprise (@ModelAttribute("mov") Transaction mov,RedirectAttributes redirectAttributes){
         try {
-            enterpriseService.saveTransaction(mov);
-            redirectAttributes.addFlashAttribute("mensaje","updateOK");
-            return "redirect:/api/enterprise/"+mov.getEnterprises().getId()+"/movements";
+            Transaction transactionObject = enterpriseService.findByIdTransaction(mov.getId());
+            if(transactionObject.getUser().getEmail().equals(mov.getUser().getEmail())){
+                enterpriseService.saveTransaction(mov);
+                redirectAttributes.addFlashAttribute("mensaje","updateOK");
+                return "redirect:/api/enterprise/"+mov.getEnterprises().getId()+"/movements";
+            }else{
+                redirectAttributes.addFlashAttribute("mensaje","updateErrorUsuario");
+                return "redirect:/api/editMovementEnterprise/"+mov.getId();
+            }
         }catch (Exception e){
             redirectAttributes.addFlashAttribute("mensaje","updateError");
-            return "redirect:/api/enterprise/"+mov.getEnterprises().getId()+"/newMovements";
+            return "redirect:/api/editMovementEnterprise/"+mov.getId();
         }
     }
 

@@ -89,4 +89,8 @@ public class EnterpriseService {
     public Transaction findByIdTransaction(Long id) {
         return transactionRepository.findById(id).get();
     }
+
+    public Long findByEmail(String email){
+        return enterpriseRepository.findByEmail(email);
+    }
 }
