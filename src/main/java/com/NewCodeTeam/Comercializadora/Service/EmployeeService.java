@@ -18,10 +18,8 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class EmployeeService implements IEmployeeService {
+public class EmployeeService  {
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -38,12 +36,7 @@ public class EmployeeService implements IEmployeeService {
         return true;
     }
 
-    @Override
-    public Employee save(Employee employee) {
-        String passEncriptada= passwordEncoder.encode(employee.getPassword());
-        employee.setPassword(passEncriptada);
-        return employeeRepository.save(employee);
-    }
+
 
     public Employee findById(Long id) {
         return employeeRepository.findById(id).get();
@@ -59,18 +52,15 @@ public class EmployeeService implements IEmployeeService {
         }
         return employees;
     }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByEmail(username);
-        Collection<EnumRoleName> CollectionRole= new ArrayList<EnumRoleName>(Collections.singletonList(employee.getRole()));
-        if(employee == null){
-            throw new UsernameNotFoundException("Email o password invalidos");
+    public boolean saveOrUpdateEmpleado(Employee empl){
+        Employee emp=employeeRepository.save(empl);
+        if (employeeRepository.findById(emp.getId())!=null){
+            return true;
         }
-        return new User(employee.getEmail(),employee.getPassword(),mapearAutoridadesRoles(CollectionRole));
+        return false;
     }
 
-    private Collection<? extends GrantedAuthority> mapearAutoridadesRoles(Collection<EnumRoleName> roles){
-        return  roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());
-    }
+
+
+
 }
