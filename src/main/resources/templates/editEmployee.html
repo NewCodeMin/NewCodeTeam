@@ -72,7 +72,8 @@
         <label class="col-md-3" for="rol">Rol del empleado:</label>
         <div class="col-md-6">
           <select th:field="*{role}" class="form-control" id="rol" required="required">
-            <option th:each="role : ${rolelist}" th:text="${role}" th:value="${role}"></option>
+            <option th:value='ROLE_ADMIN'>Administrativo</option>
+            <option th:value='ROLE_USER'>Operativo</option>
           </select>
         </div>
       </div>
