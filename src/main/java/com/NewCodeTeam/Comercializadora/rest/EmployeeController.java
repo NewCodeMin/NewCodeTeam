@@ -58,12 +58,14 @@ public class EmployeeController {
     public String saveEmployee(Employee empl, RedirectAttributes redirectAttributes){
         String passEncriptada=passwordEncoder().encode(empl.getPassword());
         empl.setPassword(passEncriptada);
-        if(employeeService.saveOrUpdateEmpleado(empl)==true){
+        try {
+            employeeService.save(empl);
             redirectAttributes.addFlashAttribute("mensaje","saveOK");
             return "redirect:/api/employees";
+        }catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "saveError");
+            return "redirect:/api/newEmployee";
         }
-        redirectAttributes.addFlashAttribute("mensaje","saveError");
-        return "redirect:/api/newEmployee";
     }
 
     @GetMapping("/editEmployee/{id}")
@@ -80,8 +82,10 @@ public class EmployeeController {
 
     @PostMapping("/updateEmployee")
     public  String updateEmployee (@ModelAttribute("empl") Employee empl, RedirectAttributes redirectAttributes){
+        String passEncriptada=passwordEncoder().encode(empl.getPassword());
+        empl.setPassword(passEncriptada);
         try {
-            employeeService.saveOrUpdateEmpleado(empl);
+            employeeService.save(empl);
             redirectAttributes.addFlashAttribute("mensaje","updateOK");
             return "redirect:/api/employees";
         }catch (Exception e){
