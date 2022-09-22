@@ -82,6 +82,7 @@
                             <li><a class="page-scroll" href="#about-section">Información</a></li>
                             <li sec:authorize="isAnonymous()"><a class="page-scroll" th:href="@{/login}">Ingresar</a></li>
                             <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/api/enterprises}">Empresas</a></li>
+                            <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/api/employees}">Empleados</a></li>
                             <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Cerrar Sesión</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
@@ -102,15 +103,22 @@
 					<div class="caption text-center text-white" data-stellar-ratio="0.7">
 
 						<div id="owl-intro-text" class="owl-carousel">
+                            <div class="item">
+                                <h1>NewCodeTeam</h1>
+                                <p>Nuestro equipo</p>
+                                <div class="extra-space-l"></div>
+
+                            </div>
+
 							<div class="item">
-								<h1>Proyecto para Tic</h1>
+								<h1>Proyecto Misión TIC 2022</h1>
 								<p>Sistema de gestion de ingreseos y egresos</p>
                                 <div class="extra-space-l"></div>
 								
 							</div>
 							<div class="item">
 								<h1>Desarrollo de Software C-3</h1>
-								<p>Universidad Antioquia</p>
+								<p>Grupo 5-6 Universidad Antioquia</p>
 								<div class="extra-space-l"></div>
 								
 							</div>

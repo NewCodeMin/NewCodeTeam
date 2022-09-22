@@ -41,6 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/index/**").permitAll()
                 .antMatchers("/api/enterprises/**").hasRole("ADMIN")
                 .antMatchers("/api/employees/**").hasRole("ADMIN")
+                .antMatchers("/api/newEnterprise").hasRole("ADMIN")
                 .and().formLogin().successHandler(customSuccessHandler)
                 .loginPage("/login").permitAll()
                 .and().exceptionHandling().accessDeniedPage("/api/Denegado")
