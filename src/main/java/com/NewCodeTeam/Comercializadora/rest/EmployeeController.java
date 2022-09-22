@@ -7,8 +7,11 @@ import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
 import com.NewCodeTeam.Comercializadora.model.enumeration.EnumRoleName;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +31,8 @@ public class EmployeeController {
 
     @Autowired
     private EnterpriseService enterpriseService;
+
+
 
     @GetMapping("/employees")
     public String getAllEmployee (Model model, @ModelAttribute("mensaje") String mensaje){
@@ -50,13 +55,15 @@ public class EmployeeController {
     }
 
     @PostMapping("/saveEmployee")
-    public  String saveEmployee (Employee empl, RedirectAttributes redirectAttributes){
+    public String saveEmployee(Employee empl, RedirectAttributes redirectAttributes){
+        String passEncriptada=passwordEncoder().encode(empl.getPassword());
+        empl.setPassword(passEncriptada);
         try {
             employeeService.save(empl);
             redirectAttributes.addFlashAttribute("mensaje","saveOK");
             return "redirect:/api/employees";
-        }catch (Exception e){
-            redirectAttributes.addFlashAttribute("mensaje","saveError");
+        }catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "saveError");
             return "redirect:/api/newEmployee";
         }
     }
@@ -75,6 +82,8 @@ public class EmployeeController {
 
     @PostMapping("/updateEmployee")
     public  String updateEmployee (@ModelAttribute("empl") Employee empl, RedirectAttributes redirectAttributes){
+        String passEncriptada=passwordEncoder().encode(empl.getPassword());
+        empl.setPassword(passEncriptada);
         try {
             employeeService.save(empl);
             redirectAttributes.addFlashAttribute("mensaje","updateOK");
@@ -100,5 +109,15 @@ public class EmployeeController {
         List<Employee> employeeList = employeeService.findEmployeesByIdEnterprise(id);
         model.addAttribute("emplelist",employeeList);
         return "employees";
+    }
+
+    @RequestMapping(value = "/Denegado")
+    public String accesoDenegado(){
+        return "denegado";
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
