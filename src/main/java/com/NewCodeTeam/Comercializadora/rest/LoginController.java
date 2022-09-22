@@ -13,6 +13,6 @@ public class LoginController {
 
     @GetMapping("/")
     public String inicio() {
-        return "login";
+        return "index";
     }
 }
