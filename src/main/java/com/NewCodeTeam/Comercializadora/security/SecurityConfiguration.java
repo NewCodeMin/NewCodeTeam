@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -35,10 +36,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/login/**").permitAll()
                 .antMatchers("/api/enterprises/**").hasRole("ADMIN")
-                .antMatchers("/api/employees/**").hasRole("USER")
+                .antMatchers("/api/employees/**").hasRole("ADMIN")
                 .and().formLogin().successHandler(customSuccessHandler)
+                .loginPage("/login").permitAll()
                 .and().exceptionHandling().accessDeniedPage("/api/Denegado")
-                .and().logout().permitAll();
+                .and().logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll();
     }
 }
