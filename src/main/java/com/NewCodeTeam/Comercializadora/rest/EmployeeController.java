@@ -82,8 +82,8 @@ public class EmployeeController {
 
     @PostMapping("/updateEmployee")
     public  String updateEmployee (@ModelAttribute("empl") Employee empl, RedirectAttributes redirectAttributes){
-        String passEncriptada=passwordEncoder().encode(empl.getPassword());
-        empl.setPassword(passEncriptada);
+        Employee employee = employeeService.findById(empl.getId());
+        empl.setPassword(employee.getPassword());
         try {
             employeeService.save(empl);
             redirectAttributes.addFlashAttribute("mensaje","updateOK");
