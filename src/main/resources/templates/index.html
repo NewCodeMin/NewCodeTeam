@@ -6,7 +6,7 @@
     Designed By: https://www.behance.net/poljakova
 	Version:	1.0	
 -->
-<html xmlns:th="http://www.thymeleaf.org">>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">>
 	<head>
 
 		<meta charset="utf-8">
@@ -80,7 +80,9 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li><a class="page-scroll" href="body">Inicio</a></li>
                             <li><a class="page-scroll" href="#about-section">Información</a></li>
-                            <li><a class="page-scroll" th:href="@{/login}">Ingresar</a></li>
+                            <li sec:authorize="isAnonymous()"><a class="page-scroll" th:href="@{/login}">Ingresar</a></li>
+                            <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/api/enterprises}">Empresas</a></li>
+                            <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Cerrar Sesión</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                   </div><!-- /.container -->
