@@ -39,9 +39,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         if (esAdministrativo(roles)) {
-            url = "/api/enterprises";
+            url = "/";
         } else if (esOperativo(roles)) {
-            url = "/api/employees";
+            url = "/";
         } else {
             url = "/api//Denegado";
         }

@@ -174,16 +174,30 @@ public class EnterpriseController {
 
     @GetMapping(value = "/enterprise/{idEnterprise}/deleteMovement/{id}")
     public  String deleteMovementEnterprise (@PathVariable("idEnterprise") Long idEnterprise,@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
-        if (enterpriseService.deleteMovementById(id) == true){
-            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
-        }else{
-            redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email=auth.getName();
+        Employee employee=employeeService.findByEmail(email);
+        Transaction movi = enterpriseService.findByIdTransaction(id);
+        if(employee.getRole().equals(EnumRoleName.ROLE_ADMIN)){
+            if (enterpriseService.deleteMovementById(id) == true){
+                redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            }else{
+                redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            }
+        }else if(movi.getUser().getId().equals(employee.getId())){
+            if (enterpriseService.deleteMovementById(id) == true){
+                redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            }else{
+                redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            }
+        }else {
+            redirectAttributes.addFlashAttribute("mensaje", "deleteErrorUser");
         }
         return "redirect:/api/enterprise/"+idEnterprise+"/movements";
     }
 
     @GetMapping ("/employee/movements")
-    public String getAllmovementsByEmployee (Model model, @ModelAttribute("mensaje") String mensaje){
+    public String getAllmovementsByEmployee (Model model, @ModelAttribute("mensaje") String mensaje, RedirectAttributes redirectAttributes){
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();
         String email=auth.getName();
         Employee employee=employeeService.findByEmail(email);
@@ -194,6 +208,6 @@ public class EnterpriseController {
         model.addAttribute("empre",empre);
         model.addAttribute("mensaje",mensaje);
         model.addAttribute("suma", total);
-        return "movementsEnterprise";
+        return "redirect:/api/enterprise/"+employee.getEnterprises().getId()+"/movements";
     }
 }
