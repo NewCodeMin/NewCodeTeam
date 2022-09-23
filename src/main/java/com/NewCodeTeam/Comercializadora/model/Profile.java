@@ -91,29 +91,4 @@ public class Profile {
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Profile)) {
-            return false;
-        }
-        return id != null && id.equals(((Profile) o).id);
-    }
-    @Override
-    public int hashCode(){return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "Profile{" +
-                "id=" + id +
-                ", image='" + image + '\'' +
-                ", phone='" + phone + '\'' +
-                ", user=" + user +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }
