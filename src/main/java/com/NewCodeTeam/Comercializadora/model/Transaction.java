@@ -3,9 +3,11 @@ package com.NewCodeTeam.Comercializadora.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "transaction")
@@ -14,8 +16,10 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "concept")
     private  String concept;
 
+    @Column(name = "amount")
     private float amount;
 
 
@@ -27,15 +31,19 @@ public class Transaction {
     @JoinColumn(name="id_enterprise")
     private Enterprise enterprises;
 
-    private LocalDate createdAt;
+    @Column(name="createdAt")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date createdAt;
 
-    private LocalDate updatedAt;
+    @Column(name="updatedAt")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date updatedAt;
 
     public Transaction() {
 
     }
 
-    public Transaction(String concept, float amount, Employee user, Enterprise enterprises, LocalDate createdAt, LocalDate updatedAt) {
+    public Transaction(String concept, float amount, Employee user, Enterprise enterprises, Date createdAt, Date updatedAt) {
         this.concept = concept;
         this.amount = amount;
         this.user = user;
@@ -84,48 +92,19 @@ public class Transaction {
         this.enterprises = enterprises;
     }
 
-    public LocalDate getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Transaction)) {
-            return false;
-        }
-        return id != null && id.equals(((Transaction) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", concept='" + concept + '\'' +
-                ", amount=" + amount +
-                ", user=" + user +
-                ", enterprises=" + enterprises +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
     }
 }
