@@ -1,5 +1,6 @@
 package com.NewCodeTeam.Comercializadora.Service;
 
+import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.model.Profile;
 import com.NewCodeTeam.Comercializadora.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +15,11 @@ public class ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
 
-    public List<Profile> findAll() {
-        return profileRepository.findAll();
+    public Profile findById(Long id) {
+        return profileRepository.findById(id).get();
     }
 
-    public Optional<Profile> getProfileById(Long id) {
-        return profileRepository.findById(id);
-    }
-
-    public Profile saveProfile(Profile profile){
-        return profileRepository.save(profile);
-    }
-
-    public <S extends Profile> S updateProfile(S entity) {
+    public <S extends Profile> S save(S entity) {
         return profileRepository.save(entity);
     }
 
