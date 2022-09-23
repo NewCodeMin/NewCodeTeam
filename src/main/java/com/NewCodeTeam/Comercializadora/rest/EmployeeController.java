@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -136,5 +138,30 @@ public class EmployeeController {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @GetMapping("/editPassword")
+    public String editEmployee(Model model, @ModelAttribute("mensaje") String mensaje){
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email=auth.getName();
+        Employee empl= employeeService.findByEmail(email);
+        model.addAttribute("empl",empl);
+        model.addAttribute("mensaje", mensaje);
+        return "editPassword";
+    }
+
+    @PostMapping("/updatePassword")
+    public  String updatePassword (@ModelAttribute("empl") Employee empl, RedirectAttributes redirectAttributes){
+        Employee employee = employeeService.findById(empl.getId());
+        String password = passwordEncoder().encode(empl.getPassword());
+        employee.setPassword(password);
+        try {
+            employeeService.save(employee);
+            redirectAttributes.addFlashAttribute("mensaje","updateOK");
+            return "redirect:/api/editPassword";
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("mensaje","updateError");
+            return "redirect:/api/editPassword";
+        }
     }
 }
