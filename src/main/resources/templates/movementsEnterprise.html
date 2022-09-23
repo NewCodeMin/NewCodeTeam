@@ -367,6 +367,9 @@
         else if (msg == "deleteError"){
             Command : toastr["error"]("Registro de Movimiento no ha sido eliminado!")
         }
+        else  if (msg == "deleteErrorUser"){
+            Command : toastr["error"]("ERROR, no puede eliminar este movimiento porque no le pertenece")
+        }
         toastr.options={
             "positionClass": "toast-top-right",
             "showDuration":"300",

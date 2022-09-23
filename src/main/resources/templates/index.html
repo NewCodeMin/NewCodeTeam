@@ -104,6 +104,14 @@
 					<div class="caption text-center text-white" data-stellar-ratio="0.7">
 
 						<div id="owl-intro-text" class="owl-carousel">
+
+                            <div class="item" sec:authorize="isAuthenticated()">
+                                <h1>Bienvenido a nuestra web</h1>
+                                <p>Su usuario es: [[${#httpServletRequest.remoteUser}]]</p>
+                                <div class="extra-space-l"></div>
+
+                            </div>
+
                             <div class="item">
                                 <h1>NewCodeTeam</h1>
                                 <p>Nuestro equipo</p>
