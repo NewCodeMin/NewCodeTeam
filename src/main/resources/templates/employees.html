@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Lista de Empleados - Ciclo3</title>
+  <title>Lista de Empresas - Ciclo3</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -325,26 +325,42 @@
     <th>Eliminar</th>
   </tr>
 
-  <!--Llenamos la tabla dibujada-->
-  <!--En nuestro controller, creamos en viewEmpleados un modelo con un atributo llamado emplelist donde esta guardada la lista de todos los empleados-->
-  <tr th:each="empleado : ${emplelist}">
-    <td th:text="${empleado.id}"></td>
-    <td th:text="${empleado.email}"></td>
-    <td th:text="${empleado.enterprises.name}"></td>
-    <td th:if="${empleado.role==empleado.role.ROLE_ADMIN}">Administrativo</td>
-    <td th:if="${empleado.role==empleado.role.ROLE_USER}">Operativo</td>
-    <td th:text="${empleado.createdAt}"></td>
-    <td th:text="${empleado.updatedAt}"></td>
-    <td><button type="button" class="btn btn-warning"><a th:href="@{/api/editEmployee/{id}(id=${empleado.id})}">Editar</a></button></td>
-    <td><button type="button" class="btn btn-danger"><a th:href="@{/api/deleteEmployee/{id}(id=${empleado.id})}">Eliminar</a></button></td>
-  </tr>
-</table>
+    <h4 th:inline="text" class="text-right nombUsuario"</h4>
+    <h1 class="titulo"> Lista de Empleados</h1>
+    <!--Dibujamos la tabla-->
+    <br><table class="table table-bordered">
+    <tr>
+      <th>ID</th>
+      <th>Correo</th>
+      <th>Empresa</th>
+      <th>Rol</th>
+      <th>Fecha creada</th>
+      <th>Fecha actualizada</th>
+      <th>Editar</th>
+      <th>Eliminar</th>
+    </tr>
 
-  <!-- vamos a crear un boton que sirva para agregar nuevos empleados -->
-  <button type="button" class="btn btn-info"><a th:href="@{/api/newEmployee}">Agregar Nuevo Empleado</a></button>
-  <br><br>
-  <!-- boton que me lleva a la lista de empresas -->
-  <button type="button" class="btn btn-primary"><a th:href="@{/api/enterprises}">Ver lista de Empresas</a></button>
+    <!--Llenamos la tabla dibujada-->
+    <!--En nuestro controller, creamos en viewEmpleados un modelo con un atributo llamado emplelist donde esta guardada la lista de todos los empleados-->
+    <tr th:each="empleado : ${emplelist}">
+      <td th:text="${empleado.id}"></td>
+      <td th:text="${empleado.email}"></td>
+      <td th:text="${empleado.enterprises.name}"></td>
+      <td th:if="${empleado.role==empleado.role.ROLE_ADMIN}">Administrativo</td>
+      <td th:if="${empleado.role==empleado.role.ROLE_USER}">Operativo</td>
+      <td th:text="${empleado.createdAt}"></td>
+      <td th:text="${empleado.updatedAt}"></td>
+      <td><button type="button" class="btn btn-warning"><a th:href="@{/api/editEmployee/{id}(id=${empleado.id})}">Editar</a></button></td>
+      <td><button type="button" class="btn btn-danger"><a th:href="@{/api/deleteEmployee/{id}(id=${empleado.id})}">Eliminar</a></button></td>
+    </tr>
+  </table>
+
+    <!-- vamos a crear un boton que sirva para agregar nuevos empleados -->
+    <button type="button" class="btn btn-info"><a th:href="@{/api/newEmployee}">Agregar Nuevo Empleado</a></button>
+    <br><br>
+    <!-- boton que me lleva a la lista de empresas -->
+    <button type="button" class="btn btn-primary"><a th:href="@{/api/enterprises}">Ver lista de Empresas</a></button>
+  </div>
 </div>
 </div>
 <script th:inline="javascript">
