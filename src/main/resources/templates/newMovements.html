@@ -1185,7 +1185,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3" for="empresa">Empresa a la que pertence:</label>
                         <div class="col-md-6">
-                            <select th:field="*{enterprises}" class="form-control" id="empresa" required="required">
+                            <select th:field="*{enterprises}" class="form-control input-lg" id="empresa" required="required">
                                 <option th:each="empresa : ${empre}" th:text="${empresa.name}" th:value="${empresa.id}"></option>
                             </select>
                         </div>
@@ -1197,7 +1197,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3" for="concept">Comcepto:</label>
                         <div class="col-md-6">
-                            <input type="text" th:field="*{concept}" class="form-control" id="concept" required="required"></div>
+                            <input type="text" th:field="*{concept}" class="form-control input-lg" placeholder="Ingresa a que area pertenece el movimiento" id="concept" required="required"></div>
                     </div>
                 </div>
 
@@ -1206,7 +1206,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3" for="monto">Valor del movimiento:</label>
                         <div class="col-md-6">
-                            <input type="number" th:field="*{amount}" class="form-control" id="monto" required="required"></div>
+                            <input type="number" th:field="*{amount}" class="form-control input-lg" id="monto" required="required"></div>
                     </div>
                 </div>
 
@@ -1215,7 +1215,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3" for="user">Empleado al que pertence:</label>
                         <div class="col-md-6">
-                            <select th:field="*{user}" class="form-control" id="user" required="required" readonly>
+                            <select th:field="*{user}" class="form-control input-lg" id="user" required="required" readonly>
                                 <option th:text="${#httpServletRequest.remoteUser}" th:value="${idEmployee}"></option>
                             </select>
                         </div>
@@ -1227,7 +1227,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3" for="createdAt">Fecha de creacion:</label>
                         <div class="col-md-6">
-                            <input type="date" th:field="*{createdAt}" class="form-control" id="createdAt" required="required">
+                            <input type="date" th:field="*{createdAt}" class="form-control input-lg" id="createdAt" required="required">
                         </div>
                     </div>
                 </div>
