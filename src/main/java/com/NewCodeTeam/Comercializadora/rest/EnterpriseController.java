@@ -165,4 +165,19 @@ public class EnterpriseController {
         }
         return "redirect:/api/enterprise/"+idEnterprise+"/movements";
     }
+
+    @GetMapping ("/employee/movements")
+    public String getAllmovementsByEmployee (Model model, @ModelAttribute("mensaje") String mensaje){
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email=auth.getName();
+        Employee employee=employeeService.findByEmail(email);
+        List<Transaction> movimentsList=enterpriseService.findMovimentsEnterpriseByIdEnterprise(employee.getEnterprises().getId());
+        float total = enterpriseService.sumMoviments(employee.getId());
+        model.addAttribute("listMoviments",movimentsList);
+        List<Enterprise> empre= enterpriseService.findByIdList(employee.getId());
+        model.addAttribute("empre",empre);
+        model.addAttribute("mensaje",mensaje);
+        model.addAttribute("suma", total);
+        return "movementsEnterprise";
+    }
 }
