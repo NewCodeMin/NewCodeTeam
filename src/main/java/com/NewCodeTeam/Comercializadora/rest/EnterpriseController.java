@@ -5,6 +5,7 @@ import com.NewCodeTeam.Comercializadora.Service.EnterpriseService;
 import com.NewCodeTeam.Comercializadora.model.Employee;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
+import com.NewCodeTeam.Comercializadora.model.enumeration.EnumRoleName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -133,16 +136,29 @@ public class EnterpriseController {
         model.addAttribute("empre",empre);
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();
         String email=auth.getName();
-        Long idEmployee=enterpriseService.findByEmail(email);
-        model.addAttribute("idEmployee",idEmployee);
+        Employee employee = employeeService.findByEmail(email);
+        if(employee.getRole().equals(EnumRoleName.ROLE_ADMIN)) {
+            List<Employee> employeeList = employeeService.findEmployeesByIdEnterprise(mov.getEnterprises().getId());
+            model.addAttribute("employees",employeeList);
+        }else{
+            List<Employee> employeeList = employeeService.findByIdListEmployees(employee.getId());
+            model.addAttribute("employees",employeeList);
+        }
         return "editMovements";
     }
 
     @PostMapping("/enterprise/updateMovementEnterprise")
     public  String updateMovementEnterprise (@ModelAttribute("mov") Transaction mov,RedirectAttributes redirectAttributes){
         try {
+            Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+            String email=auth.getName();
+            Employee employee=employeeService.findByEmail(email);
             Transaction transactionObject = enterpriseService.findByIdTransaction(mov.getId());
-            if(transactionObject.getUser().getEmail().equals(mov.getUser().getEmail())){
+            if(employee.getRole().equals(EnumRoleName.ROLE_ADMIN)) {
+                enterpriseService.saveTransaction(mov);
+                redirectAttributes.addFlashAttribute("mensaje","updateOK");
+                return "redirect:/api/enterprise/"+mov.getEnterprises().getId()+"/movements";
+            }else if(transactionObject.getUser().getEmail().equals(mov.getUser().getEmail())){
                 enterpriseService.saveTransaction(mov);
                 redirectAttributes.addFlashAttribute("mensaje","updateOK");
                 return "redirect:/api/enterprise/"+mov.getEnterprises().getId()+"/movements";

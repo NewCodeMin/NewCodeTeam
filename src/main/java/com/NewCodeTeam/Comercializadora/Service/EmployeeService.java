@@ -2,6 +2,7 @@ package com.NewCodeTeam.Comercializadora.Service;
 
 import com.NewCodeTeam.Comercializadora.model.Employee;
 
+import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,16 @@ public class EmployeeService  {
 
     public Employee findByEmail(String email) {
         return employeeRepository.findByEmail(email);
+    }
+    public List<Employee>findByIdListEmployees (Long id) {
+        List<Employee> employeeList = new ArrayList<>();
+        List<Employee> employeesAll = employeeRepository.findAll();
+        for (Employee employee : employeesAll) {
+            if (Objects.equals(employee.getId(), id)) {
+                employeeList.add(employee);
+                break;
+            }
+        }
+        return  employeeList;
     }
 }
