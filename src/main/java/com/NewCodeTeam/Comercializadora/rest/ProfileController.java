@@ -73,14 +73,4 @@ public class ProfileController {
             return "redirect:/api/editProfile/";
         }
     }
-
-    @DeleteMapping("/profiles/{id}")//Eliminar
-    public String deleteProfile(@PathVariable("id") Long id){
-        boolean answer=profileService.deleteByIdProfile(id);
-        if (answer){
-            return "Se pudo eliminar correctamente el empleado con id "+id;
-        }else{
-            return "No se puedo eliminar correctamente el empleado con id "+id;
-        }
-    }
 }

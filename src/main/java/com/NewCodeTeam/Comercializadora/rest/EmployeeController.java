@@ -2,8 +2,10 @@ package com.NewCodeTeam.Comercializadora.rest;
 
 import com.NewCodeTeam.Comercializadora.Service.EmployeeService;
 import com.NewCodeTeam.Comercializadora.Service.EnterpriseService;
+import com.NewCodeTeam.Comercializadora.Service.ProfileService;
 import com.NewCodeTeam.Comercializadora.model.Employee;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
+import com.NewCodeTeam.Comercializadora.model.Profile;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
 import com.NewCodeTeam.Comercializadora.model.enumeration.EnumRoleName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,8 @@ public class EmployeeController {
     @Autowired
     private EnterpriseService enterpriseService;
 
-
+    @Autowired
+    private ProfileService profileService;
 
     @GetMapping("/employees")
     public String getAllEmployee (Model model, @ModelAttribute("mensaje") String mensaje){
@@ -96,10 +99,24 @@ public class EmployeeController {
 
     @GetMapping(value = "/deleteEmployee/{id}")
     public  String deleteEmployee (@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
-        if (employeeService.deleteById(id)){
-            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+        Employee employee = employeeService.findById(id);
+        if(employee.getProfile() != null){
+            Profile profile = profileService.findById(employee.getProfile().getId());
+            employee.setProfile(null);
+            employeeService.save(employee);
+            profile.setUser(null);
+            profileService.save(profile);
+            if (employeeService.deleteById(id) && profileService.deleteById(profile.getId())){
+                redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            }else{
+                redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            }
         }else{
-            redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            if (employeeService.deleteById(id)){
+                redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            }else{
+                redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            }
         }
         return "redirect:/api/employees";
     }

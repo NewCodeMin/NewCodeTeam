@@ -23,7 +23,7 @@ public class ProfileService {
         return profileRepository.save(entity);
     }
 
-    public boolean deleteByIdProfile(Long id) {
+    public boolean deleteById(Long id) {
         profileRepository.deleteById(id);
         if (this.profileRepository.findById(id).isPresent()) {
             return false;
