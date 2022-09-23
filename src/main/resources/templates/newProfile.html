@@ -1166,7 +1166,7 @@
                 <div class="container">
                     <br>
                     <!--Crear formulario para llenar los datos de la empresa y guardarlo en el objeto emp -->
-                    <form th:action="@{/api/saveProfile}" th:object="${profile}" method="post">
+                    <form th:action="@{/api/saveProfile}" th:object="${profile}" method="post" enctype="multipart/form-data">
                         <!--Campo para nombre-->
 
                         <div class="row">
@@ -1185,7 +1185,7 @@
                             <div class="form-group col-md-12">
                                 <label class="col-md-3" for="image">Imagen:</label>
                                 <div class="col-md-6">
-                                    <input type="text" th:field="*{image}" class="form-control input-lg" id="image" placeholder="Ingresa imagen" required="required"></div>
+                                    <input type="file" name="file" class="form-control input-lg" id="image" placeholder="Ingresa imagen" required="required"></div>
                             </div>
                         </div>
 
