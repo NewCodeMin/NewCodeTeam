@@ -1,15 +1,17 @@
 package com.NewCodeTeam.Comercializadora.Service;
 
 import com.NewCodeTeam.Comercializadora.model.Employee;
+
+import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
-public class EmployeeService {
+public class EmployeeService  {
+
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -30,8 +32,33 @@ public class EmployeeService {
         return employeeRepository.save(entity);
     }
 
-    public Optional<Employee> findById(Long id) {
-        return employeeRepository.findById(id);
+    public Employee findById(Long id) {
+        return employeeRepository.findById(id).get();
     }
 
+    public List<Employee> findEmployeesByIdEnterprise(Long id) {
+        List<Employee> employees = new ArrayList<>();
+        List<Employee> employeesList = employeeRepository.findAll();
+        for (Employee employee : employeesList) {
+            if (Objects.equals(employee.getEnterprises().getId(), id)) {
+                employees.add(employee);
+            }
+        }
+        return employees;
+    }
+
+    public Employee findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
+    }
+    public List<Employee>findByIdListEmployees (Long id) {
+        List<Employee> employeeList = new ArrayList<>();
+        List<Employee> employeesAll = employeeRepository.findAll();
+        for (Employee employee : employeesAll) {
+            if (Objects.equals(employee.getId(), id)) {
+                employeeList.add(employee);
+                break;
+            }
+        }
+        return  employeeList;
+    }
 }

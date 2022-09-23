@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Agregar nuevo Movimiento - Ciclo3</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        a{
+            color:white;
+        }
+        a:hover {
+            color: black;
+            text-decoration:none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <p th:inline="text" class="text-right">User: [[${#httpServletRequest.remoteUser}]]</p>
+    <button type="button" class="btn btn-danger" style="float:right"><a th:href="@{/logout}">Cerrar Sesión</a></button>
+    <h1> Agregue aqui los datos del movimiento</h1>
+    <br>
+    <!--Crear formulario para llenar los datos de la empresa y guardarlo en el objeto emp -->
+    <form th:action="@{/api/enterprise/saveMovementEnterprise }" th:object="${movement}" method="post">
+
+        <!--Campo para empresa-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="empresa">Empresa a la que pertence:</label>
+                <div class="col-md-6">
+                    <select th:field="*{enterprises}" class="form-control" id="empresa" required="required">
+                        <option th:each="empresa : ${empre}" th:text="${empresa.name}" th:value="${empresa.id}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!--Campo para comcepto-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="concept">Comcepto:</label>
+                <div class="col-md-6">
+                    <input type="text" th:field="*{concept}" class="form-control" id="concept" required="required"></div>
+            </div>
+        </div>
+
+        <!--Campo para monto-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="monto">Valor del movimiento:</label>
+                <div class="col-md-6">
+                    <input type="number" th:field="*{amount}" class="form-control" id="monto" required="required"></div>
+            </div>
+        </div>
+
+        <!--Campo para empleado-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="user">Empleado al que pertence:</label>
+                <div class="col-md-6">
+                    <select th:field="*{user}" class="form-control" id="user" required="required" readonly>
+                        <option th:text="${#httpServletRequest.remoteUser}" th:value="${idEmployee}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!--Campo para CreateDate-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="createdAt">Fecha de creacion:</label>
+                <div class="col-md-6">
+                    <input type="date" th:field="*{createdAt}" class="form-control" id="createdAt" required="required">
+                </div>
+            </div>
+        </div>
+
+        <!--Boton para enviar todo y ejecutar accion -->
+        <div class="row">
+            <div class="col-md-2">
+                <button class="btn btn-success">Registrar movimiento</button>
+            </div>
+        </div>
+
+    </form>
+
+    <br>
+    <a href="javascript: history.go(-1)" class="btn btn-info" role="button">Atrás</a>
+
+</div>
+
+<script th:inline="javascript">
+    window.onload=function(){
+        document.getElementById("createdAt").value=new Date().toJSON().slice(0,10).replace(/-/g,'-');
+    }
+</script>
+</body>
+</html>
