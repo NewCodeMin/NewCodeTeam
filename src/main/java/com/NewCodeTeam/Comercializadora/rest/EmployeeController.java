@@ -39,8 +39,13 @@ public class EmployeeController {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private  ImagenView imagenView;
+
     @GetMapping("/employees")
     public String getAllEmployee (Model model, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         List<Employee> employeeList= employeeService.findAll();
         model.addAttribute("emplelist",employeeList);
         model.addAttribute("mensaje",mensaje);
@@ -49,6 +54,8 @@ public class EmployeeController {
 
     @GetMapping("/newEmployee")
     public String newEmployee(Model model, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Employee empl= new Employee();
         model.addAttribute("empl",empl);
         model.addAttribute("mensaje",mensaje);
@@ -75,6 +82,8 @@ public class EmployeeController {
 
     @GetMapping("/editEmployee/{id}")
     public String editEmployee(Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Employee empl= employeeService.findById(id);
         model.addAttribute("empl",empl);
         model.addAttribute("mensaje", mensaje);
