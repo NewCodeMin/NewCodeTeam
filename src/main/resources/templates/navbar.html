@@ -70,6 +70,7 @@
           <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/api/enterprises}">Empresas</a></li>
           <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/api/employees}">Empleados</a></li>
           <li sec:authorize="hasRole('ROLE_USER')"><a th:href="@{/api/employee/movements}">Movimientos de mi empresa</a></li>
+          <li sec:authorize="isAuthenticated()"><a th:href="@{/api/editProfile}">Editar mi perfil</a></li>
           <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Cerrar Sesión</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->

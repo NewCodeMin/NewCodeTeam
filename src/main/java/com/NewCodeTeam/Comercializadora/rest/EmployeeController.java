@@ -2,14 +2,18 @@ package com.NewCodeTeam.Comercializadora.rest;
 
 import com.NewCodeTeam.Comercializadora.Service.EmployeeService;
 import com.NewCodeTeam.Comercializadora.Service.EnterpriseService;
+import com.NewCodeTeam.Comercializadora.Service.ProfileService;
 import com.NewCodeTeam.Comercializadora.model.Employee;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
+import com.NewCodeTeam.Comercializadora.model.Profile;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
 import com.NewCodeTeam.Comercializadora.model.enumeration.EnumRoleName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -32,10 +36,16 @@ public class EmployeeController {
     @Autowired
     private EnterpriseService enterpriseService;
 
+    @Autowired
+    private ProfileService profileService;
 
+    @Autowired
+    private  ImagenView imagenView;
 
     @GetMapping("/employees")
     public String getAllEmployee (Model model, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         List<Employee> employeeList= employeeService.findAll();
         model.addAttribute("emplelist",employeeList);
         model.addAttribute("mensaje",mensaje);
@@ -44,6 +54,8 @@ public class EmployeeController {
 
     @GetMapping("/newEmployee")
     public String newEmployee(Model model, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Employee empl= new Employee();
         model.addAttribute("empl",empl);
         model.addAttribute("mensaje",mensaje);
@@ -70,6 +82,8 @@ public class EmployeeController {
 
     @GetMapping("/editEmployee/{id}")
     public String editEmployee(Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Employee empl= employeeService.findById(id);
         model.addAttribute("empl",empl);
         model.addAttribute("mensaje", mensaje);
@@ -96,10 +110,24 @@ public class EmployeeController {
 
     @GetMapping(value = "/deleteEmployee/{id}")
     public  String deleteEmployee (@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
-        if (employeeService.deleteById(id)){
-            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+        Employee employee = employeeService.findById(id);
+        if(employee.getProfile() != null){
+            Profile profile = profileService.findById(employee.getProfile().getId());
+            employee.setProfile(null);
+            employeeService.save(employee);
+            profile.setUser(null);
+            profileService.save(profile);
+            if (employeeService.deleteById(id) && profileService.deleteById(profile.getId())){
+                redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            }else{
+                redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            }
         }else{
-            redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            if (employeeService.deleteById(id)){
+                redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            }else{
+                redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+            }
         }
         return "redirect:/api/employees";
     }
@@ -119,5 +147,30 @@ public class EmployeeController {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @GetMapping("/editPassword")
+    public String editEmployee(Model model, @ModelAttribute("mensaje") String mensaje){
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email=auth.getName();
+        Employee empl= employeeService.findByEmail(email);
+        model.addAttribute("empl",empl);
+        model.addAttribute("mensaje", mensaje);
+        return "editPassword";
+    }
+
+    @PostMapping("/updatePassword")
+    public  String updatePassword (@ModelAttribute("empl") Employee empl, RedirectAttributes redirectAttributes){
+        Employee employee = employeeService.findById(empl.getId());
+        String password = passwordEncoder().encode(empl.getPassword());
+        employee.setPassword(password);
+        try {
+            employeeService.save(employee);
+            redirectAttributes.addFlashAttribute("mensaje","updateOK");
+            return "redirect:/api/editPassword";
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("mensaje","updateError");
+            return "redirect:/api/editPassword";
+        }
     }
 }

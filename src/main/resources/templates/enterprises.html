@@ -310,7 +310,8 @@
 
 <div class="contenido">
   <div class="container">
-
+    
+    <img class="img-thumbnail rounded float-left" th:src="@{'/imgUs/' + ${image.image}}" style="max-width: 5%">
     <h4 th:inline="text" class="text-right nombUsuario">Usuario actual: [[${#httpServletRequest.remoteUser}]]</h4>
     <h1 class="titulo"> Lista de Empresas</h1>
     <!--Dibujamos la tabla-->
