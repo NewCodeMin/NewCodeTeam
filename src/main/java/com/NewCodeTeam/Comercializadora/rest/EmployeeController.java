@@ -134,6 +134,8 @@ public class EmployeeController {
 
     @GetMapping("/enterprise/{id}/employees")
     public String getEmployeesByEnterprise (@PathVariable("id") Long id, Model model){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         List<Employee> employeeList = employeeService.findEmployeesByIdEnterprise(id);
         model.addAttribute("emplelist",employeeList);
         return "employees";
@@ -173,4 +175,6 @@ public class EmployeeController {
             return "redirect:/api/editPassword";
         }
     }
+
+    
 }
