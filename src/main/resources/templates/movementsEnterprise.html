@@ -313,14 +313,14 @@
     <h4 th:inline="text" class="text-right nombUsuario">Usuario actual: [[${#httpServletRequest.remoteUser}]]</h4>
     <h1> Lista de movimientos</h1>
     <!--Dibujamos la tabla-->
-    <h3 th:inline="text" class="text-right">Suma total: [[${#numbers.formatCurrency(suma)}]]</h3>
+    <h3 th:inline="text" class="text-right">Suma total: $ [[${#numbers.formatDecimal(suma, 0, 'COMMA', 2, 'POINT')}]]</h3>
     <br>
     <table class="table table-bordered">
     <tr>
         <th>ID</th>
         <th>Empresa</th>
         <th>Concepto</th>
-        <th class="text-right">Valor</th>
+        <th>Valor del movimiento</th>
         <th>Fecha creada</th>
         <th>Fecha actualizada</th>
         <th>Usuario encargado</th>
@@ -334,7 +334,7 @@
         <td th:text="${moviment.id}"></td>
         <td th:text="${moviment.enterprises.name}"></td>
         <td th:text="${moviment.concept}"></td>
-        <td class="text-right" th:text="${#numbers.formatCurrency(moviment.amount)}"></td>
+        <td th:inline="text">$ [[${#numbers.formatDecimal(moviment.amount, 0, 'COMMA', 2, 'POINT')}]]</td>
         <td th:text="${moviment.createdAt}"></td>
         <td th:text="${moviment.updatedAt}"></td>
         <td th:text="${moviment.user.email}"></td>
