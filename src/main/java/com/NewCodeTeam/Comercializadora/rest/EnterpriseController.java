@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.aspectj.util.LangUtil.isEmpty;
+
 @Controller
 @RequestMapping("/api")
 public class EnterpriseController {
@@ -225,5 +227,25 @@ public class EnterpriseController {
         model.addAttribute("mensaje",mensaje);
         model.addAttribute("suma", total);
         return "redirect:/api/enterprise/"+employee.getEnterprises().getId()+"/movements";
+    }
+
+    @GetMapping("/enterpriseFilter/{name}")
+    public String enterpriseFilter (@PathVariable("name") String name, Model model,RedirectAttributes redirectAttributes){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
+        try {
+            List<Enterprise> enterpriseList = enterpriseService.findByNameEnterprises(name);
+            boolean isEmpty = isEmpty(enterpriseList);
+            if (isEmpty) {
+                redirectAttributes.addFlashAttribute("mensaje","filterError");
+                return "redirect:/api/enterprises";
+            } else {
+                model.addAttribute("listEnterprise",enterpriseList);
+                return "enterprises";
+            }
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("mensaje","filterError");
+            return "redirect:/api/enterprises";
+        }
     }
 }

@@ -313,6 +313,27 @@
     <img class="img-thumbnail rounded float-left" th:src="@{'/imgUs/' + ${image.image}}" style="max-width: 5%">
     <h4 th:inline="text" class="text-right nombUsuario">Usuario actual: [[${#httpServletRequest.remoteUser}]]</h4>
     <h1 class="titulo"> Lista de Empleados</h1>
+
+    <br>
+    <!--Filtrador-->
+      <div class="form-group row">
+        <label for="correoFilt" class="col-sm-1 col-form-label">Filtrar por correo:</label>
+        <div class="col-sm-5">
+          <input type="email" class="form-control" id="correoFilt" placeholder="Imgresa el correo para filtrar">
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+              <button class="btn btn-danger btn-lg active" role="button" aria-pressed="true" onclick="quitFilter()">Quitar filtro</button>
+            <div class="col-md-3">
+              <button class="btn btn-success btn-lg active" role="button" aria-pressed="true" onclick="getValueInput()">Filtrar</button>
+            </div>
+        </div>
+        </div>
+      </div>
+    <p id="valueInput"></p>
+
+
       <!--Dibujamos la tabla-->
       <br><table class="table table-bordered">
       <tr>
@@ -349,6 +370,34 @@
   </div>
 </div>
 <script th:inline="javascript">
+
+  const getValueInput = () =>{
+    let inputValue = document.getElementById("correoFilt").value;
+
+    var url = document.location;
+
+    var frg = url.toString().split('api/');
+
+    var result = frg[0];
+
+    var link= result + 'api/employeeFilter/'+ inputValue;
+
+    var  link2= result + 'api/employeeFilter/';
+    if(link === link2){
+      window.location.replace(result + 'api/employees');
+    }else {
+      window.location.replace(link);
+    }
+  }
+
+  const quitFilter = () => {
+    var url = document.location;
+
+    var frg = url.toString().split('api/');
+
+    var result = frg[0];
+    window.location.replace(result + 'api/employees');
+  }
   window.onload=function(){
 
     var msg= [[${mensaje}]];
@@ -364,14 +413,15 @@
     else if (msg == "deleteError"){
       Command : toastr["error"]("Registro de empleado no ha sido eliminado!")
     }
+    else if (msg == "filterError"){
+      Command : toastr["error"]("Correo no encontrado")
+    }
     toastr.options={
       "positionClass": "toast-top-right",
       "showDuration":"300",
       "showMethod":"fadeIn",
       "hideMethod":"fadeOut",
     }
-
-
   }
 
 </script>
