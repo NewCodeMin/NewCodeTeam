@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.aspectj.util.LangUtil.isEmpty;
+
 @Controller
 @RequestMapping("/api")
 public class EmployeeController {
@@ -176,5 +178,23 @@ public class EmployeeController {
         }
     }
 
-    
+    @GetMapping("/employeeFilter/{email}")
+    public String employeeFilter (@PathVariable("email") String email, Model model,RedirectAttributes redirectAttributes){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
+        try {
+            List<Employee> employeeList = employeeService.findByEmailListEmployees(email);
+            boolean isEmpty = isEmpty(employeeList);
+            if (isEmpty) {
+                redirectAttributes.addFlashAttribute("mensaje","filterError");
+                return "redirect:/api/employees";
+            } else {
+                model.addAttribute("emplelist",employeeList);
+                return "employees";
+            }
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("mensaje","filterError");
+            return "redirect:/api/employees";
+        }
+    }
 }
