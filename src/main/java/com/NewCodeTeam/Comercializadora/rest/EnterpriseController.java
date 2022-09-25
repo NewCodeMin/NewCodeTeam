@@ -4,9 +4,11 @@ import com.NewCodeTeam.Comercializadora.Service.EmployeeService;
 import com.NewCodeTeam.Comercializadora.Service.EnterpriseService;
 import com.NewCodeTeam.Comercializadora.model.Employee;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
+import com.NewCodeTeam.Comercializadora.model.Profile;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
 import com.NewCodeTeam.Comercializadora.model.enumeration.EnumRoleName;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.aspectj.util.LangUtil.isEmpty;
+
 @Controller
 @RequestMapping("/api")
 public class EnterpriseController {
@@ -28,9 +32,13 @@ public class EnterpriseController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private  ImagenView imagenView;
 
     @GetMapping("/enterprises")
     public String getAllEnterprise(Model model, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         List<Enterprise> enterpriseList=enterpriseService.findAll();
         model.addAttribute("listEnterprise",enterpriseList);
         model.addAttribute("mensaje",mensaje);
@@ -39,6 +47,8 @@ public class EnterpriseController {
 
     @GetMapping("/newEnterprise")
     public String newEnterprise(Model model, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Enterprise emp= new Enterprise();
         model.addAttribute("emp",emp);
         model.addAttribute("mensaje",mensaje);
@@ -59,6 +69,8 @@ public class EnterpriseController {
 
     @GetMapping("/editEnterprise/{id}")
     public String editEnterprise(Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Enterprise emp= enterpriseService.findById(id);
         model.addAttribute("emp",emp);
         model.addAttribute("mensaje", mensaje);
@@ -91,6 +103,8 @@ public class EnterpriseController {
 
     @GetMapping ("enterprise/{id}/movements")
     public String getAllmovementsByEnterprise (Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         List<Transaction> movimentsList=enterpriseService.findMovimentsEnterpriseByIdEnterprise(id);
         float total = enterpriseService.sumMoviments(id);
         model.addAttribute("listMoviments",movimentsList);
@@ -103,6 +117,8 @@ public class EnterpriseController {
 
     @GetMapping("enterprise/{id}/newMovements")
     public String newMoviments(Model model,@PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Transaction movement= new Transaction();
         model.addAttribute("movement",movement);
         model.addAttribute("mensaje",mensaje);
@@ -129,6 +145,8 @@ public class EnterpriseController {
 
     @GetMapping("/editMovementEnterprise/{id}")
     public String editMovementEnterprise(Model model, @PathVariable("id") Long id, @ModelAttribute("mensaje") String mensaje){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
         Transaction mov= enterpriseService.findByIdTransaction(id);
         model.addAttribute("mov",mov);
         model.addAttribute("mensaje", mensaje);
@@ -209,5 +227,25 @@ public class EnterpriseController {
         model.addAttribute("mensaje",mensaje);
         model.addAttribute("suma", total);
         return "redirect:/api/enterprise/"+employee.getEnterprises().getId()+"/movements";
+    }
+
+    @GetMapping("/enterpriseFilter/{name}")
+    public String enterpriseFilter (@PathVariable("name") String name, Model model,RedirectAttributes redirectAttributes){
+        Profile image = imagenView.imgView();
+        model.addAttribute("image",image);
+        try {
+            List<Enterprise> enterpriseList = enterpriseService.findByNameEnterprises(name);
+            boolean isEmpty = isEmpty(enterpriseList);
+            if (isEmpty) {
+                redirectAttributes.addFlashAttribute("mensaje","filterError");
+                return "redirect:/api/enterprises";
+            } else {
+                model.addAttribute("listEnterprise",enterpriseList);
+                return "enterprises";
+            }
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("mensaje","filterError");
+            return "redirect:/api/enterprises";
+        }
     }
 }

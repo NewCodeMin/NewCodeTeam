@@ -61,4 +61,13 @@ public class EmployeeService  {
         }
         return  employeeList;
     }
+
+    public List<Employee> findByEmailListEmployees (String email) {
+        List<Employee> employee = new ArrayList<>();
+        Employee employee1 = findByEmail(email);
+        if (employee1 != null){
+            employee.add(employee1);
+        }
+        return  employee;
+    }
 }

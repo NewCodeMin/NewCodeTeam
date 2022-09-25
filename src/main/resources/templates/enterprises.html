@@ -310,9 +310,30 @@
 
 <div class="contenido">
   <div class="container">
-
+    
+    <img class="img-thumbnail rounded float-left" th:src="@{'/imgUs/' + ${image.image}}" style="max-width: 5%">
     <h4 th:inline="text" class="text-right nombUsuario">Usuario actual: [[${#httpServletRequest.remoteUser}]]</h4>
     <h1 class="titulo"> Lista de Empresas</h1>
+
+    <br>
+    <!--Filtrador-->
+    <div class="form-group row">
+      <label for="nombreFilt" class="col-sm-1 col-form-label">Filtrar por nombre:</label>
+      <div class="col-sm-5">
+        <input type="email" class="form-control" id="nombreFilt" placeholder="Imgresa el nombre de la empresa para filtrar">
+      </div>
+
+      <div class="row">
+        <div class="col-md-5">
+          <button class="btn btn-danger btn-lg active" role="button" aria-pressed="true" onclick="quitFilter()">Quitar filtro</button>
+          <div class="col-md-3">
+            <button class="btn btn-success btn-lg active" role="button" aria-pressed="true" onclick="getValueInput()">Filtrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p id="valueInput"></p>
+
     <!--Dibujamos la tabla-->
     <br><table class="table table-bordered">
     <tr>
@@ -351,6 +372,34 @@
 </div>
 
 <script th:inline="javascript">
+  const getValueInput = () =>{
+    let inputValue = document.getElementById("nombreFilt").value;
+
+    var url = document.location;
+
+    var frg = url.toString().split('api/');
+
+    var result = frg[0];
+
+    var link= result + 'api/enterpriseFilter/'+ inputValue;
+
+    var  link2= result + 'api/enterpriseFilter/';
+    if(link === link2){
+      window.location.replace(result + 'api/enterprises');
+    }else {
+      window.location.replace(link);
+    }
+  }
+
+  const quitFilter = () => {
+    var url = document.location;
+
+    var frg = url.toString().split('api/');
+
+    var result = frg[0];
+    window.location.replace(result + 'api/enterprises');
+  }
+
   window.onload=function(){
 
     var msg= [[${mensaje}]];
@@ -366,14 +415,15 @@
     else if (msg == "deleteError"){
       Command : toastr["error"]("Empresa no ha sido eliminada!")
     }
+    else if (msg == "filterError"){
+      Command : toastr["error"]("Empresa no encontrada")
+    }
     toastr.options={
       "positionClass": "toast-top-right",
       "showDuration":"300",
       "showMethod":"fadeIn",
       "hideMethod":"fadeOut",
     }
-
-
   }
 
 </script>
