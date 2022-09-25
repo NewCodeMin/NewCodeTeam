@@ -1,5 +1,6 @@
 package com.NewCodeTeam.Comercializadora.Service;
 
+import com.NewCodeTeam.Comercializadora.model.Employee;
 import com.NewCodeTeam.Comercializadora.model.Enterprise;
 import com.NewCodeTeam.Comercializadora.model.Profile;
 import com.NewCodeTeam.Comercializadora.model.Transaction;
@@ -92,5 +93,18 @@ public class EnterpriseService {
 
     public Long findByEmail(String email){
         return enterpriseRepository.findByEmail(email);
+    }
+
+    public Enterprise findByName(String name) {
+        return enterpriseRepository.findByName(name);
+    }
+
+    public List<Enterprise> findByNameEnterprises (String name) {
+        List<Enterprise> enterprise = new ArrayList<>();
+        Enterprise enterprise1 = findByName(name);
+        if (enterprise1 != null){
+            enterprise.add(enterprise1);
+        }
+        return  enterprise;
     }
 }
