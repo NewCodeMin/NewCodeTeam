@@ -1,9 +1,11 @@
 package com.NewCodeTeam.Comercializadora.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,14 +28,15 @@ public class Profile {
     @JoinColumn(name="id_employee")
     private Employee user;
 
-
     @Column(name="createdAt")
-    private LocalDate createdAt;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date createdAt;
 
     @Column(name="updatedAt")
-    private LocalDate updatedAt;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date updatedAt;
 
-    public Profile(String image, String phone, Employee user, LocalDate createdAt, LocalDate updatedAt) {
+    public Profile(String image, String phone, Employee user, Date createdAt, Date updatedAt) {
         this.image = image;
         this.phone = phone;
         this.user = user;
@@ -76,19 +79,19 @@ public class Profile {
         this.user = user;
     }
 
-    public LocalDate getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
